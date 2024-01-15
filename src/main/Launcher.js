@@ -128,6 +128,11 @@ export default class Launcher extends EventEmitter {
       this.openedAtLogin = true
     }
 
+    // auto-launch: create a Desktop Entry for Linux
+    if (extra['--hidden'] === '1') {
+      this.openedAtLogin = true
+    }
+
     const file = parseArgvAsFile(args)
     if (file) {
       this.file = file
