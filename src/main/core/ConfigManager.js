@@ -25,9 +25,10 @@ import { separateConfig } from '@shared/utils'
 import { reduceTrackerString } from '@shared/utils/tracker'
 
 export default class ConfigManager {
-  constructor () {
+  constructor (options = {}) {
     this.systemConfig = {}
     this.userConfig = {}
+    this.autoLaunchManager = options.autoLaunchManager
 
     this.init()
   }
@@ -167,9 +168,15 @@ export default class ConfigManager {
   fixUserConfig () {
     // Fix the value of open-at-login when the user delete
     // the Motrix self-starting item through startup management.
-    const openAtLogin = app.getLoginItemSettings(LOGIN_SETTING_OPTIONS).openAtLogin
-    if (this.getUserConfig('open-at-login') !== openAtLogin) {
-      this.setUserConfig('open-at-login', openAtLogin)
+    if (is.linux()) {
+      this.autoLaunchManager.isEnabledForLinux().then(isEnabled => {
+        this.setUserConfig('open-at-login', isEnabled)
+      })
+    } else {
+      const openAtLogin = app.getLoginItemSettings(LOGIN_SETTING_OPTIONS).openAtLogin
+      if (this.getUserConfig('open-at-login') !== openAtLogin) {
+        this.setUserConfig('open-at-login', openAtLogin)
+      }
     }
 
     if (this.getUserConfig('tracker-source').length === 0) {

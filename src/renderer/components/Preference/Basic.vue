@@ -89,7 +89,6 @@
           <el-col
             class="form-item-sub"
             :span="24"
-            v-if="!isLinux"
           >
             <el-checkbox v-model="form.openAtLogin">
               {{ $t('preferences.open-at-login') }}

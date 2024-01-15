@@ -46,6 +46,8 @@ export default class Application extends EventEmitter {
   init () {
     this.initContext()
 
+    this.initAutoLaunchManager()
+
     this.initConfigManager()
 
     this.setupLogger()
@@ -70,8 +72,6 @@ export default class Application extends EventEmitter {
 
     this.initDockManager()
 
-    this.initAutoLaunchManager()
-
     this.initEnergyManager()
 
     this.initProtocolManager()
@@ -95,7 +95,9 @@ export default class Application extends EventEmitter {
 
   initConfigManager () {
     this.configListeners = {}
-    this.configManager = new ConfigManager()
+    this.configManager = new ConfigManager({
+      autoLaunchManager: this.autoLaunchManager
+    })
   }
 
   offConfigListeners () {
@@ -246,13 +248,17 @@ export default class Application extends EventEmitter {
     this.configListeners[key] = userConfig.onDidChange(key, async (newValue, oldValue) => {
       logger.info(`[Motrix] detected ${key} value change event:`, newValue, oldValue)
       if (is.linux()) {
-        return
-      }
-
-      if (newValue) {
-        this.autoLaunchManager.enable()
+        if (newValue) {
+          this.autoLaunchManager.enableForLinux()
+        } else {
+          this.autoLaunchManager.disableForLinux()
+        }
       } else {
-        this.autoLaunchManager.disable()
+        if (newValue) {
+          this.autoLaunchManager.enable()
+        } else {
+          this.autoLaunchManager.disable()
+        }
       }
     })
   }

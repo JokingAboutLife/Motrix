@@ -61,6 +61,7 @@ let mainConfig = {
       })
     ],
   },
+  devtool: "source-map",
 }
 
 /**
