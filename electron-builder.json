@@ -172,12 +172,6 @@
           "arch": [
             "x64"
           ]
-        },
-        {
-          "target": "snap",
-          "arch": [
-            "x64"
-          ]
         }
       ],
       "extraResources": {
@@ -187,14 +181,5 @@
           "**/*"
         ]
       }
-    },
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://dl.motrix.app/releases/"
-      },
-      {
-        "provider": "github"
-      }
-    ]
+    }
   }
